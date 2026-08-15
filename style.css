@@ -83,12 +83,34 @@ h1 {
     overflow-wrap: anywhere;
 }
 
-.message:nth-of-type(even) {
+.user-message {
     align-self: flex-end;
     color: #ffffff;
     background: linear-gradient(135deg, #6366f1, #4f46e5);
     border-color: transparent;
     border-radius: 16px 6px 16px 16px;
+}
+
+.server-message {
+    align-self: flex-start;
+}
+
+.error-message {
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+.typing-message {
+    color: #64748b;
+    font-style: italic;
+    animation: typing-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes typing-pulse {
+    50% {
+        opacity: 0.45;
+    }
 }
 
 .system-message {

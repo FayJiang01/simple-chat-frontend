@@ -4,18 +4,68 @@ const clearButton = document.getElementById("clearButton");
 const messages = document.getElementById("messages");
 const counter = document.getElementById("counter");
 
-let sentCount = 0;
+const STORAGE_KEY = "simple-chat-history";
+let chatHistory = loadChatHistory();
+let sentCount = chatHistory.filter((item) => item.role === "User").length;
 
 // 本機測試先用 localhost。
 // 部署 Render 後，把這裡改成你的公開 Render URL。
 // 例如：https://your-service.onrender.com
 const API_URL = "https://simple-chat-backend-q483.onrender.com";
 
-function addMessage(role, text) {
+function loadChatHistory() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch (error) {
+        console.error("Unable to load chat history", error);
+        return [];
+    }
+}
+
+function saveChatHistory() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+}
+
+function updateCounter() {
+    counter.innerText = `Messages sent: ${sentCount}`;
+}
+
+function scrollToLatestMessage() {
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function addMessage(role, text, options = {}) {
+    const { save = true, extraClass = "" } = options;
+    const placeholder = messages.querySelector(".system-message");
+
+    if (placeholder) {
+        placeholder.remove();
+    }
+
     const div = document.createElement("div");
-    div.className = "message";
+    div.className = `message ${role.toLowerCase()}-message ${extraClass}`.trim();
     div.innerText = `${role}: ${text}`;
     messages.appendChild(div);
+
+    if (save) {
+        chatHistory.push({ role, text });
+        saveChatHistory();
+    }
+
+    scrollToLatestMessage();
+    return div;
+}
+
+function restoreChatHistory() {
+    if (chatHistory.length === 0) {
+        return;
+    }
+
+    messages.innerHTML = "";
+    chatHistory.forEach(({ role, text }) => {
+        addMessage(role, text, { save: false });
+    });
+    updateCounter();
 }
 
 async function sendMessage() {
@@ -26,10 +76,16 @@ async function sendMessage() {
     }
 
     addMessage("User", message);
+    sentCount++;
+    updateCounter();
     input.value = "";
 
     button.disabled = true;
     button.innerText = "Sending...";
+    const typingMessage = addMessage("Server", "正在輸入…", {
+        save: false,
+        extraClass: "typing-message"
+    });
 
     try {
         const response = await fetch(
@@ -51,11 +107,10 @@ async function sendMessage() {
 
         const data = await response.json();
 
+        typingMessage.remove();
         addMessage("Server", data.reply);
-
-        sentCount++;
-        counter.innerText = `Messages sent: ${sentCount}`;
     } catch (error) {
+        typingMessage.remove();
         addMessage("Error", "無法連線到 Backend。");
         console.error(error);
     } finally {
@@ -75,6 +130,10 @@ input.addEventListener("keydown", function (event) {
 
 clearButton.addEventListener("click", function () {
     messages.innerHTML = '<div class="system-message">聊天紀錄已清除</div>';
+    chatHistory = [];
+    localStorage.removeItem(STORAGE_KEY);
     sentCount = 0;
-    counter.innerText = "Messages sent: 0";
+    updateCounter();
 });
+
+restoreChatHistory();
