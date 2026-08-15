@@ -23,6 +23,7 @@ body {
 }
 
 .container {
+    position: relative;
     width: min(100%, 720px);
     padding: 32px;
     background: rgba(255, 255, 255, 0.94);
@@ -38,6 +39,23 @@ h1 {
     font-size: clamp(1.7rem, 5vw, 2.25rem);
     line-height: 1.15;
     letter-spacing: -0.035em;
+}
+
+.theme-button {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    padding: 8px 12px;
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    font-size: 0.8rem;
+}
+
+.theme-button:hover:not(:disabled) {
+    color: #4338ca;
+    background: #eef2ff;
+    box-shadow: none;
 }
 
 .container > p:first-of-type {
@@ -207,6 +225,87 @@ button:disabled {
     box-shadow: none;
 }
 
+[data-theme="dark"] {
+    color-scheme: dark;
+    color: #e2e8f0;
+    background: #0f172a;
+}
+
+[data-theme="dark"] body {
+    background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.2), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 30%),
+        #0f172a;
+}
+
+[data-theme="dark"] .container {
+    background: rgba(15, 23, 42, 0.94);
+    border-color: #334155;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] h1 {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .container > p:first-of-type,
+[data-theme="dark"] #counter {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .messages {
+    background: #111827;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .message {
+    color: #e2e8f0;
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="dark"] .user-message {
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border-color: transparent;
+}
+
+[data-theme="dark"] .error-message {
+    color: #fecaca;
+    background: #451a1a;
+    border-color: #7f1d1d;
+}
+
+[data-theme="dark"] .system-message {
+    color: #cbd5e1;
+    background: #334155;
+}
+
+[data-theme="dark"] input {
+    color: #f8fafc;
+    background: #1e293b;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .theme-button,
+[data-theme="dark"] .secondary-button {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .theme-button:hover:not(:disabled) {
+    color: #c7d2fe;
+    background: #312e81;
+}
+
+[data-theme="dark"] .secondary-button:hover:not(:disabled) {
+    color: #fecaca;
+    background: #451a1a;
+    border-color: #7f1d1d;
+}
+
 @media (max-width: 600px) {
     body {
         min-height: 100dvh;
@@ -221,6 +320,19 @@ button:disabled {
         border: 0;
         border-radius: 0;
         box-shadow: none;
+    }
+
+    .theme-button {
+        top: 18px;
+        right: 16px;
+    }
+
+    h1 {
+        padding-right: 96px;
+    }
+
+    [data-theme="dark"] body {
+        background: #0f172a;
     }
 
     .messages {

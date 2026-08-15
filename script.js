@@ -1,10 +1,12 @@
 const input = document.getElementById("messageInput");
 const button = document.getElementById("sendButton");
 const clearButton = document.getElementById("clearButton");
+const themeToggle = document.getElementById("themeToggle");
 const messages = document.getElementById("messages");
 const counter = document.getElementById("counter");
 
 const STORAGE_KEY = "simple-chat-history";
+const THEME_KEY = "simple-chat-theme";
 let chatHistory = loadChatHistory();
 let sentCount = chatHistory.filter((item) => item.role === "User").length;
 
@@ -28,6 +30,22 @@ function saveChatHistory() {
 
 function updateCounter() {
     counter.innerText = `Messages sent: ${sentCount}`;
+}
+
+function applyTheme(theme) {
+    const isDark = theme === "dark";
+    document.documentElement.dataset.theme = theme;
+    themeToggle.innerText = isDark ? "Light mode" : "Dark mode";
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+
+    applyTheme(savedTheme || preferredTheme);
 }
 
 function scrollToLatestMessage() {
@@ -136,4 +154,14 @@ clearButton.addEventListener("click", function () {
     updateCounter();
 });
 
+themeToggle.addEventListener("click", function () {
+    const nextTheme = document.documentElement.dataset.theme === "dark"
+        ? "light"
+        : "dark";
+
+    localStorage.setItem(THEME_KEY, nextTheme);
+    applyTheme(nextTheme);
+});
+
+loadTheme();
 restoreChatHistory();
