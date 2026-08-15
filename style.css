@@ -114,9 +114,27 @@ h1 {
 }
 
 .error-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #b91c1c;
     background: #fef2f2;
     border-color: #fecaca;
+}
+
+.retry-button {
+    padding: 5px 9px;
+    color: #b91c1c;
+    background: #ffffff;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.78rem;
+}
+
+.retry-button:hover:not(:disabled) {
+    color: #ffffff;
+    background: #dc2626;
+    box-shadow: none;
 }
 
 .typing-message {
@@ -275,6 +293,17 @@ button:disabled {
     color: #fecaca;
     background: #451a1a;
     border-color: #7f1d1d;
+}
+
+[data-theme="dark"] .retry-button {
+    color: #fecaca;
+    background: #7f1d1d;
+    border-color: #991b1b;
+}
+
+[data-theme="dark"] .retry-button:hover:not(:disabled) {
+    color: #ffffff;
+    background: #dc2626;
 }
 
 [data-theme="dark"] .system-message {

@@ -86,17 +86,40 @@ function restoreChatHistory() {
     updateCounter();
 }
 
-async function sendMessage() {
-    const message = input.value.trim();
+function addRetryMessage(message) {
+    const div = document.createElement("div");
+    div.className = "message error-message";
+
+    const text = document.createElement("span");
+    text.innerText = "無法連線到 Backend。";
+
+    const retryButton = document.createElement("button");
+    retryButton.type = "button";
+    retryButton.className = "retry-button";
+    retryButton.innerText = "Retry";
+    retryButton.addEventListener("click", function () {
+        div.remove();
+        sendMessage(message, false);
+    });
+
+    div.append(text, retryButton);
+    messages.appendChild(div);
+    scrollToLatestMessage();
+}
+
+async function sendMessage(messageToRetry = null, addUserMessage = true) {
+    const message = messageToRetry ?? input.value.trim();
 
     if (!message) {
         return;
     }
 
-    addMessage("User", message);
-    sentCount++;
-    updateCounter();
-    input.value = "";
+    if (addUserMessage) {
+        addMessage("User", message);
+        sentCount++;
+        updateCounter();
+        input.value = "";
+    }
 
     button.disabled = true;
     button.innerText = "Sending...";
@@ -129,7 +152,7 @@ async function sendMessage() {
         addMessage("Server", data.reply);
     } catch (error) {
         typingMessage.remove();
-        addMessage("Error", "無法連線到 Backend。");
+        addRetryMessage(message);
         console.error(error);
     } finally {
         button.disabled = false;
@@ -138,7 +161,9 @@ async function sendMessage() {
     }
 }
 
-button.addEventListener("click", sendMessage);
+button.addEventListener("click", function () {
+    sendMessage();
+});
 
 input.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
