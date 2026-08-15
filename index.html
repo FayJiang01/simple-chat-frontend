@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Full Stack Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Simple AI Chat</h1>
+        <p>輸入訊息，傳送到 Python Backend。</p>
+
+        <div id="messages" class="messages">
+            <div class="system-message">尚未傳送訊息</div>
+        </div>
+
+        <div class="input-row">
+            <input id="messageInput" type="text" placeholder="輸入訊息...">
+            <button id="sendButton">Send</button>
+        </div>
+
+        <p id="counter">Messages sent: 0</p>
+        <button id="clearButton" class="secondary-button">Clear Chat</button>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
